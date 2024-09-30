@@ -1,150 +1,119 @@
 import tkinter as tk
 from tkinter import ttk
 
-root = tk.Tk()
-root.title("Calculadora Contabil ")
-root.geometry("500x300+550+250")
-root.minsize(500, 300)
-root.maxsize(600, 800)
+def opcoesCalculo():
+    limpar_tela()
+
+    buttonDescobrirReducao = ttk.Button(root, text="Descobrir base de cálculo", command=descobrirReducao)
+    buttonDescobrirReducao.pack(pady=10)
+
+    buttonCalcReducao = ttk.Button(root, text="Calcular ICMS", command=calcReducao)
+    buttonCalcReducao.pack(pady=10)
+
+def limpar_tela():
+    for widget in root.winfo_children():
+        widget.destroy()
 
 def calcReducao():
-    def limpatOpcoesCalculo():
-        buttonDescobrirReducao.destroy()
-        buttonCalcReducao.destroy()
-    limpatOpcoesCalculo()
-    def calcBaseCalculo():
-        try:
-            def limparResultBaseCalculo():
-                label3.destroy()
-                buttonlimparResultBaseCalculo.destroy()
-                opcoesCalculo()
-
-            val1v = value1.get()
-            val2v = value2.get()
-        
-            val1 = float(val1v.replace(',','.'))
-            val2 = float(val2v.replace(',','.'))
-
-            if val1 == 0:
-                label3 = tk.Label(root, text="Erro: O valor total das notas não pode ser zero")
-                label3.pack()
-                buttonlimparResultBaseCalculo = tk.Button(root, text="Limpar Calculo", command=limparResultBaseCalculo)
-                limparBaseCalculo()
-                buttonlimparResultBaseCalculo.pack()
-            else:
-                result = val1 - val1 * (val2 / 100)
-                resultImposto = result * (12 / 100)
-                label3 = tk.Label(root, text=f'A base de calculo seria de R${result:.2f} o valor de ICMS seria de R${resultImposto:.2f}')
-                label3.pack()
-                buttonlimparResultBaseCalculo = tk.Button(root, text="Limpar Calculo", command=limparResultBaseCalculo)
-                limparBaseCalculo()
-                buttonlimparResultBaseCalculo.pack()
-                
-        except ValueError:
-            label3 = tk.Label(root, text="Erro: Entrada inválida. Digite apenas números.")
-            label3.pack()
-            limparBaseCalculo()
-            buttonlimparResultDescobrirReducao = tk.Button(root, text="Limpar Calculo", command=limparResultBaseCalculo)
-            buttonlimparResultDescobrirReducao.pack()
-
-
-    def limparBaseCalculo():
-        label1.destroy()
-        value1.destroy()
-        label2.destroy()
-        value2.destroy()
-        buttonCalcular.destroy()
-
-
-    label1 = tk.Label(root, text="Coloque o valor total das notas:")
-    label1.pack()
-    value1 = tk.Entry(root)
-    value1.pack()
-    label2 = tk.Label(root, text="Coloque a redução da base de calculo")
-    label2.pack()
-    value2 = tk.Entry(root)
-    value2.pack()
-    buttonCalcular = tk.Button(root, text="Calcular", command=calcBaseCalculo)
-    buttonCalcular.pack()
+    limpar_tela()
+    label1 = ttk.Label(root, text="Coloque o valor total das notas:")
+    label1.pack(pady=5)
     
+    value1 = ttk.Entry(root)
+    value1.pack(pady=5)
+    
+    label2 = ttk.Label(root, text="Coloque a redução da base de cálculo (%)")
+    label2.pack(pady=5)
+    
+    value2 = ttk.Entry(root)
+    value2.pack(pady=5)
+    
+    buttonCalcular = ttk.Button(root, text="Calcular", command=lambda: calcBaseCalculo(value1, value2))
+    buttonCalcular.pack(pady=10)
 
+def calcBaseCalculo(value1, value2):
+    try:
+        val1 = float(value1.get().replace(',', '.'))
+        val2 = float(value2.get().replace(',', '.'))
+
+        if val1 == 0:
+            raise ValueError("O valor total não pode ser zero")
+        else:
+            result = val1 - val1 * (val2 / 100)
+            resultImposto = result * (12 / 100)
+
+            label3 = ttk.Label(root, text=f'A base de cálculo seria R${result:.2f} e o ICMS R${resultImposto:.2f}')
+            label3.pack(pady=10)
+    except ValueError as e:
+        label3 = ttk.Label(root, text=f"Erro: {str(e)}")
+        label3.pack(pady=10)
+
+    buttonLimpar = ttk.Button(root, text="Limpar", command=opcoesCalculo)
+    buttonLimpar.pack(pady=10)
 
 def descobrirReducao():
-    def limpatOpcoesCalculo():
-        buttonDescobrirReducao.destroy()
-        buttonCalcReducao.destroy()
-    limpatOpcoesCalculo()
-    def calcBaseCalculo():
-        try:
-            def limparResultDescobrirReducao():
-                label3.destroy()
-                buttonlimparResultDescobrirReducao.destroy()
-                opcoesCalculo()
+    limpar_tela()
+    
+    label1 = ttk.Label(root, text="Coloque o valor total dos produtos:")
+    label1.pack(pady=5)
+    
+    value1 = ttk.Entry(root)
+    value1.pack(pady=5)
+    
+    label2 = ttk.Label(root, text="Coloque o valor da base de cálculo com a redução aplicada")
+    label2.pack(pady=5)
+    
+    value2 = ttk.Entry(root)
+    value2.pack(pady=5)
+    
+    buttonCalcular = ttk.Button(root, text="Calcular", command=lambda: calcularReducao(value1, value2))
+    buttonCalcular.pack(pady=10)
 
+def calcularReducao(value1, value2):
+    try:
+        val1 = float(value1.get().replace(',', '.'))
+        val2 = float(value2.get().replace(',', '.'))
 
+        if val1 == 0:
+            raise ValueError("O valor total não pode ser zero")
+        else:
+            result = 100 - ((val2 * 100) / val1)
+            label3 = ttk.Label(root, text=f'O percentual da redução é de: {result:.2f}%')
+            label3.pack(pady=10)
+    except ValueError as e:
+        label3 = ttk.Label(root, text=f"Erro: {str(e)}")
+        label3.pack(pady=10)
 
-            val1v = value1.get()
-            val2v = value2.get()
-        
-            val1 = float(val1v.replace(',','.'))
-            val2 = float(val2v.replace(',','.'))
+    buttonLimpar = ttk.Button(root, text="Limpar", command=opcoesCalculo)
+    buttonLimpar.pack(pady=10)
 
-            if val1 == 0:
-                label3 = tk.Label(root, text="Erro: O valor total dos produtos não pode ser zero.")
-                label3.pack()
-                buttonlimparResultDescobrirReducao = tk.Button(root, text="Limpar Calculo", command=limparResultDescobrirReducao)
-                limparDescobrirReducao()
-                buttonlimparResultDescobrirReducao.pack()
-            else:
-                result = 100 - ((val2 * 100) / val1)
-                label3 = tk.Label(root, text=f'O percentual da redução é de: {result:.2f}%')
-                label3.pack()
-                buttonlimparResultDescobrirReducao = tk.Button(root, text="Limpar Calculo", command=limparResultDescobrirReducao)
-                limparDescobrirReducao()
-                buttonlimparResultDescobrirReducao.pack()
-                
-        except ValueError:
-            label3 = tk.Label(root, text="Erro: Entrada inválida. Digite apenas números.")
-            label3.pack()
-            limparDescobrirReducao()
-            buttonlimparResultDescobrirReducao = tk.Button(root, text="Limpar Calculo", command=limparResultDescobrirReducao)
-            buttonlimparResultDescobrirReducao.pack()
+def adicionar_scrollbar():
+    canvas = tk.Canvas(root)
+    scrollbar = ttk.Scrollbar(root, orient="vertical", command=canvas.yview)
+    scrollable_frame = ttk.Frame(canvas)
 
+    scrollable_frame.bind(
+        "<Configure>",
+        lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+    )
 
-    def limparDescobrirReducao():
-        label1.destroy()
-        value1.destroy()
-        label2.destroy()
-        value2.destroy()
-        buttonCalcular.destroy()
+    canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+    canvas.configure(yscrollcommand=scrollbar.set)
 
+    canvas.pack(side="left", fill="both", expand=True)
+    scrollbar.pack(side="right", fill="y")
 
-    label1 = tk.Label(root, text="Coloque o valor total dos produtos:")
-    label1.pack()
-    value1 = tk.Entry(root)
-    value1.pack()
-    label2 = tk.Label(root, text="Coloque o valor da BC com a redução Aplicada")
-    label2.pack()
-    value2 = tk.Entry(root)
-    value2.pack()
-    buttonCalcular = tk.Button(root, text="Calcular", command=calcBaseCalculo)
-    buttonCalcular.pack()
+    return scrollable_frame
 
-buttonDescobrirReducao = tk.Button(root, text="Descobrir base de calculo", command=descobrirReducao)
-buttonDescobrirReducao.pack()
-buttonCalcReducao = tk.Button(root, text="Descobrir o valor de ICMS", command=calcReducao)
-buttonCalcReducao.pack()
+root = tk.Tk()
+root.title("Calculadora Contábil")
+root.geometry("500x400+550+250")
+root.minsize(500, 400)
+root.maxsize(600, 800)
 
-def opcoesCalculo():
+opcoesCalculo()
 
-    buttonDescobrirReducao = tk.Button(root, text="Descobrir base de calculo", command=descobrirReducao)
-    buttonDescobrirReducao.pack()
-    buttonCalcReducao = tk.Button(root, text="Descobrir o valor de ICMS", command=calcReducao)
-    buttonCalcReducao.pack()
-
-    def limpatOpcoesCalculo():
-        buttonDescobrirReducao.destroy()
-        buttonCalcReducao.destroy()
+adicionar_scrollbar()
 
 try:
     root.mainloop()
